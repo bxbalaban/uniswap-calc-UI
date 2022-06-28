@@ -166,28 +166,35 @@ def ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice):
     datarange = {"ranges": datarange,"begining": {"ethprice":P1,"eth":x1,"usdc":y1,"notionalvalue":P1 * x1 + y1},"tvl":150000000,"fees": 3000000}
     return datarange
 
-@app.route("/calculate",methods=["GET"])
-def calculate():
-    ##for num in range(1,10):
-    ##    USDC_ETH_UPPER(5000, 1, 1400+100*num, 1000)
-    ##return "Distant Reading Arng of science fiction novels."
+@app.route("/calculate",methods=["GET","POST"])
+# def calculate():
+#     ##for num in range(1,10):
+#     ##    USDC_ETH_UPPER(5000, 1, 1400+100*num, 1000)
+#     ##return "Distant Reading Arng of science fiction novels."
     
-    #Set the parameters from url
-    # args = request.args
-    # usdc = float(args['usdc'])
-    # eth = float(args['eth'])
-    # upperbound = float(args['upperbound']) 
-    # lowerbound = float(args['lowerbound']) 
-    # tradeprice = float(args['tradeprice'])
+#     #Set the parameters from url
+#     # args = request.args
+#     # usdc = float(args['usdc'])
+#     # eth = float(args['eth'])
+#     # upperbound = float(args['upperbound']) 
+#     # lowerbound = float(args['lowerbound']) 
+#     # tradeprice = float(args['tradeprice'])
     
-    # datarange = ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice)
+#     # datarange = ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice)
 
-    datarange = ASSET_BALANCES_TRADEPRICE(6146, 2.897, 1239, 900, 1111.9)
-    ##ASSET_BALANCES_TRADEPRICE(1828.42, 1, 2000, 215.73, 1000)
-    return datarange
+#     datarange = ASSET_BALANCES_TRADEPRICE(6146, 2.897, 1239, 900, 1111.9)
+#     ##ASSET_BALANCES_TRADEPRICE(1828.42, 1, 2000, 215.73, 1000)
+#     return datarange
 
 def members():
+    #  if request.method == 'GET':
+    #     place = request.args.get('deposit-1', None)
+    #     if place:
+    #         return {"members":["Member1","Member2","Member3"]}
+
+    #     return "No place information is given"
     return {"members":["Member1","Member2","Member3"]}
+
 if __name__ == "__main__":
     app.run(debug=True)
 #    main()
