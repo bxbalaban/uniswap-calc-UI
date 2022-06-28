@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState, useEffect } from 'react'
 
 // import "./styles.css"
 
@@ -33,14 +33,39 @@ const customStyles = {
   },
 }
 
-// const [minValue, set_minValue] = useState(25);
-// const [maxValue, set_maxValue] = useState(75);
 
 
 const main = () => {
+
+  const [data, setData] = useState([{}])
+  useEffect(() => {
+    console.log("inside home")
+    fetch(`http://127.0.0.1:5000/calculate`).then(
+      response => response.json()
+    ).then(
+      data => {
+        setData(data)
+        console.log(data)
+      }
+    ).catch(err => {
+      // Do something for an error here
+      console.log("Error Reading data " + err);
+    })
+  }, [])
+
   return (
 
     <div className={style.wrapper}>
+      <div>
+      {(typeof data.members==='undefined')?(
+        <p>Loading</p>
+      ):(
+        data.members.map((member,i)=>(
+          <p key ={i}>{member}</p>
+        ))
+      )}
+    
+    </div>
       <div className={style.content}>
         <div className={style.wrapperForColumns}>
           <div className={style.formHeader}>
@@ -54,8 +79,8 @@ const main = () => {
               <h2>ETH Current Price</h2>
             </div>
           </div>
-          <div className={style.transferPropContainer}> 
-          {/* deposit 1 input */}
+          <div className={style.transferPropContainer}>
+            {/* deposit 1 input */}
             <input
               type="text"
               className={style.transferPropInput}
@@ -164,24 +189,24 @@ const main = () => {
             </div>
           </div>
         </div>
-        
+
 
       </div>
       <div className="border-spacing-10">
 
-        
-          <div className={style.transferPropContainer}>
-            <div className=" grid gap-4 grid-cols-2 place-items-center" >
-              <h2>Val : </h2>
-              <h2>0.0</h2>
-            </div>
+
+        <div className={style.transferPropContainer}>
+          <div className=" grid gap-4 grid-cols-2 place-items-center" >
+            <h2>Val : </h2>
+            <h2>0.0</h2>
           </div>
-        
+        </div>
+
 
         <div className={style.confirmButton}>
           Calculate
         </div>
-        
+
       </div>
     </div>
 
