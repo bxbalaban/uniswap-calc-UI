@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 // import "./styles.css"
 
 const style = {
-  wrapper: `h-fit object-scale-down  m-auto max-w-screen-lg flex align-middle flex items-center justify-center mt-20 vertical-align: baseline`,
+  wrapper: `h-fit object-scale-down  m-auto max-w-screen-md flex align-middle flex items-center justify-center mt-20 vertical-align: baseline`,
   wrapperForColumns: `grid gap-4 grid-cols-3 place-items-center auto-cols-max `,
   content: `bg-[#181B1F] w-[100rem] rounded-2xl p-5 `,
   formHeader: `px-2 flex items-center justify-between font-semibold text-xl`,
@@ -16,6 +16,7 @@ const style = {
   currencySelectorArrow: `text-lg`,
   confirmButton: `w-44 justify-center bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
 }
+
 
 const customStyles = {
   content: {
@@ -34,19 +35,59 @@ const customStyles = {
 }
 
 
+let uri = "http://127.0.0.1:5000/calculate"
+
+function updateQueryStringParameter(params: Map<string, number>) {
+
+  // value: number, key: string
+  var myMap = Object.values(params).map((a) => {
+    let key = a.name
+    let value = a.val
+    if(value!==value){}
+    else{
+      var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+      var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+      if (uri.match(re)) {
+        return uri = uri.replace(re, '$1' + key + "=" + value + '$2');
+      }
+      else {
+        return uri = uri + separator + key + "=" + value;
+      }
+    }
+  });
+
+}
+
 
 const main = () => {
-
+  const [depositUsdc, setdepositUsdc] = useState('')
+  const [depositEth, setDepositEth] = useState('')
+  const [tradeprice, setTradeprice] = useState('')
   const [data, setData] = useState([{}])
+
+  const params = [
+    { name: "usdc", val: parseInt(depositUsdc) },
+    { name: "eth", val: parseInt(depositEth) },
+    { name: "tradeprice", val: parseInt(tradeprice) },
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    updateQueryStringParameter(params)
+    console.log(uri)
+  }
+
   useEffect(() => {
+
     console.log("inside home")
-    fetch(`http://127.0.0.1:5000/calculate`).then(
+    fetch(uri).then(
       response => response.json()
     ).then(
       data => {
         setData(data)
         console.log(data)
       }
+
     ).catch(err => {
       // Do something for an error here
       console.log("Error Reading data " + err);
@@ -78,9 +119,9 @@ const main = () => {
               name="deposit-1"
               className={style.transferPropInput}
               placeholder="0.0"
-              value={1}
+              // value={1}
               pattern="^[0-9]*[.,]?[0-9]*$"
-            // onChange={(e) => handleChange(e, 'amount')}
+              onChange={(e) => setdepositUsdc(e.target.value)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -96,7 +137,7 @@ const main = () => {
               className={style.transferPropInput}
               placeholder="0.0"
               pattern="^[0-9]*[.,]?[0-9]*$"
-            // onChange={(e) => handleChange(e, 'amount')}
+              onChange={(e) => setTradeprice(e.target.value)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -111,7 +152,7 @@ const main = () => {
               className={style.transferPropInput}
               placeholder="0.0"
               pattern="^[0-9]*[.,]?[0-9]*$"
-            // onChange={(e) => handleChange(e, 'amount')}
+              onChange={(e) => setDepositEth(e.target.value)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -184,26 +225,36 @@ const main = () => {
           </div>
         </div>
         <div>
-          
+
           <div className={style.transferPropContainer}>
             <div className=" grid gap-4 grid-cols-2 place-items-center" >
               <h2>Val : </h2>
-              <h2>0.0</h2>
+              <h2>
+                {(typeof data.fees === 'undefined') ? (
+                  <p>Loading</p>
+                ) : (
+                  <p >{data.fees}</p>
+                )
+                }
+              </h2>
             </div>
-            <div className={style.confirmButton}>
+            <div onClick={(e) => handleSubmit(e)} className={style.confirmButton}>
               Calculate
             </div>
 
+
           </div>
-         
-          {(typeof data.members === 'undefined') ? (
+
+          {/* {(typeof data.members === 'undefined') ? (
             <p>Loading</p>
           ) : (
             data.members.map((member, i) => (
               <p key={i}>{member}</p>
             ))
-          )}
-          
+          )} */}
+
+
+
         </div>
         {/* retrieved data will be shown here */}
       </div>
@@ -220,3 +271,7 @@ const main = () => {
 }
 
 export default main
+
+function value(value: any): void {
+  throw new Error('Function not implemented.');
+}

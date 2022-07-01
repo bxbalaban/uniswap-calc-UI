@@ -4,7 +4,7 @@ import math
 # import flask
 import json
 from flask import request
-from flask import Flask,render_template
+from flask import Flask, render_template
 app = Flask(__name__)
 
 # # app = flask.Flask(__name__)
@@ -62,7 +62,7 @@ def USDC_ETH_UPPER(usdc, eth, upperbound, currentprice):
         )
     )
     p = currentprice
-    b = upperbound  ### Upper Bound
+    b = upperbound  # Upper Bound
     x = eth
     y = usdc
 
@@ -74,7 +74,7 @@ def USDC_ETH_UPPER(usdc, eth, upperbound, currentprice):
 
 
 def ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice):
-    #JSON object to return
+    # JSON object to return
     data = {}
 
     #print("What are asset balances at 2500 USDC per ETH?")
@@ -92,47 +92,47 @@ def ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice):
 
     datarange = []
     for num in range(0, 11):
-        
+
         P1 = (upperbound - lowerbound) / 10 * num + lowerbound
         sp1 = P1**0.5
         x1 = calculate_x(L, sp1, sa, sb)
         y1 = calculate_y(L, sp1, sa, sb)
-        rangedata = {"ethprice":P1,"eth":x1,"usdc":y1,"notionalvalue":P1 * x1 + y1}
-        #print(
+        rangedata = {"ethprice": P1, "eth": x1,
+                     "usdc": y1, "notionalvalue": P1 * x1 + y1}
+        # print(
         #    "At ETH price {:.2f}, amount of ETH x={:.2f} amount of USDC y={:.2f}. In USDC terms: ${:.2f}".format(
         #        P1, x1, y1, P1 * x1 + y1
         #    )
-        #)
+        # )
         datarange.append(rangedata)
-        #print(rangedata)
-
+        # print(rangedata)
 
     # Y Value at the time of the trade price
     P1 = tradeprice
-    sp1 = P1**0.5   
+    sp1 = P1**0.5
     x1 = calculate_x(L, sp1, sa, sb)
     y1 = calculate_y(L, sp1, sa, sb)
-    
-    #print(
+
+    # print(
     #    "Adjusted balances at the begining. ETH price {:.2f}, ETH x={:.2f} USDC y={:.2f}. Total Investment: ${:.2f}".format(
     #        P1, x1, y1, P1 * x1 + y1
     #    )
-    #)
+    # )
 
     # Connect to the database
-    #mydb = mysql.connector.connect(
+    # mydb = mysql.connector.connect(
     #    host="torasandb.mysql.database.azure.com",
     #    user="foueralogin@torasandb",
     #    password="xxxxxxxxxxxx",
     #    database="binance",
-    #)
+    # )
 
     # The sql query to pull average TVL and avg fees for the last ten days
     #sql = "WITH CTE AS (SELECT * FROM poolvolumedata WHERE snapshotdate < DATE(NOW()) ORDER BY snapshotdate desc LIMIT 10) SELECT AVG(feesusd) AS feesusd, AVG(tvlusd) AS tvlusd FROM CTE;"
 
     # Connect to the database and get the row
     #mycursor = mydb.cursor()
-    #mycursor.execute(sql)
+    # mycursor.execute(sql)
     #myresult = mycursor.fetchone()
 
     # Set the fees and the tvl
@@ -160,40 +160,43 @@ def ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice):
 
     # Display the result
     #print("The amount of fees collected: ${:.2f}".format(feescollected))
-    #print(
+    # print(
     #    "Full range fees collected: ${:.2f}".format(investmentotal / tvlusd * feesusd)
-    #)
-    datarange = {"ranges": datarange,"begining": {"ethprice":P1,"eth":x1,"usdc":y1,"notionalvalue":P1 * x1 + y1},"tvl":150000000,"fees": 3000000}
+    # )
+    datarange = {"ranges": datarange, "begining": {"ethprice": P1, "eth": x1,
+                                                   "usdc": y1, "notionalvalue": P1 * x1 + y1}, "tvl": 150000000, "fees": 3000000}
     return datarange
 
-@app.route("/calculate",methods=["GET","POST"])
-# def calculate():
-#     ##for num in range(1,10):
-#     ##    USDC_ETH_UPPER(5000, 1, 1400+100*num, 1000)
-#     ##return "Distant Reading Arng of science fiction novels."
-    
-#     #Set the parameters from url
-#     # args = request.args
-#     # usdc = float(args['usdc'])
-#     # eth = float(args['eth'])
-#     # upperbound = float(args['upperbound']) 
-#     # lowerbound = float(args['lowerbound']) 
-#     # tradeprice = float(args['tradeprice'])
-    
-#     # datarange = ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice)
 
-#     datarange = ASSET_BALANCES_TRADEPRICE(6146, 2.897, 1239, 900, 1111.9)
-#     ##ASSET_BALANCES_TRADEPRICE(1828.42, 1, 2000, 215.73, 1000)
-#     return datarange
+@app.route("/calculate", methods=["GET", "POST"])
+def calculate():
+    # for num in range(1,10):
+    ##    USDC_ETH_UPPER(5000, 1, 1400+100*num, 1000)
+    # return "Distant Reading Arng of science fiction novels."
 
-def members():
-    #  if request.method == 'GET':
-    #     place = request.args.get('deposit-1', None)
-    #     if place:
-    #         return {"members":["Member1","Member2","Member3"]}
+    # Set the parameters from url
+    # args = request.args
+    # usdc = float(args['usdc'])
+    # eth = float(args['eth'])
+    # upperbound = float(args['upperbound'])
+    # lowerbound = float(args['lowerbound'])
+    # tradeprice = float(args['tradeprice'])
 
-    #     return "No place information is given"
-    return {"members":["Member1","Member2","Member3"]}
+    # datarange = ASSET_BALANCES_TRADEPRICE(usdc, eth, upperbound, lowerbound, tradeprice)
+
+    datarange = ASSET_BALANCES_TRADEPRICE(6146, 2.897, 1239, 900, 1111.9)
+    ##ASSET_BALANCES_TRADEPRICE(1828.42, 1, 2000, 215.73, 1000)
+    return datarange
+
+# def members():
+#     #  if request.method == 'GET':
+#     #     place = request.args.get('deposit-1', None)
+#     #     if place:
+#     #         return {"members":["Member1","Member2","Member3"]}
+
+#     #     return "No place information is given"
+#     return {"fees":["Member1"]}
+
 
 if __name__ == "__main__":
     app.run(debug=True)
