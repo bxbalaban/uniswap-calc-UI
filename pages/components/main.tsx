@@ -75,6 +75,17 @@ const main = () => {
     e.preventDefault()
     updateQueryStringParameter(params)
     console.log(uri)
+    const response = await fetch(uri, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+    });
+    const result = await response.json();
+
+    setData(result)
+    console.log(data)
+    
   }
 
   useEffect(() => {
