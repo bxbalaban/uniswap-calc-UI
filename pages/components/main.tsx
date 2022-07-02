@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom';
+
 // import "./styles.css"
 
 const style = {
@@ -43,8 +44,8 @@ function updateQueryStringParameter(params: Map<string, number>) {
   var myMap = Object.values(params).map((a) => {
     let key = a.name
     let value = a.val
-    if(value!==value){}
-    else{
+    if (value !== value) { }
+    else {
       var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
       var separator = uri.indexOf('?') !== -1 ? "&" : "?";
       if (uri.match(re)) {
@@ -60,10 +61,10 @@ function updateQueryStringParameter(params: Map<string, number>) {
 
 
 const main = () => {
-  const [depositUsdc, setdepositUsdc] = useState('')
-  const [depositEth, setDepositEth] = useState('')
-  const [tradeprice, setTradeprice] = useState('')
+
+  let depositUsdc: number, depositEth:number, tradeprice:number;
   const [data, setData] = useState([{}])
+
 
   const params = [
     { name: "usdc", val: parseInt(depositUsdc) },
@@ -71,25 +72,66 @@ const main = () => {
     { name: "tradeprice", val: parseInt(tradeprice) },
   ];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    updateQueryStringParameter(params)
-    console.log(uri)
-    const response = await fetch(uri, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-    });
-    const result = await response.json();
 
+  function timeout(delay: number) {
+    return new Promise(res => setTimeout(res, delay));
+  }
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault()
+
+    setTimeout(() => {
+      
+    }, 500);
+    updateQueryStringParameter(params)
+
+    const response = await fetch(uri, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    const result = await response.json();
     setData(result)
     console.log(data)
-    
+    console.log(uri)
+  }
+
+  const handleSubmitForDepositUsdc = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    depositUsdc=parseInt(e.target.value)
+    params.map((a) => {
+      if (a.name === "usdc") {
+        a.val = (depositUsdc);
+      }
+    })
+    handleSubmit(e)
+  }
+
+  const handleSubmitForDepositEth = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    depositEth=parseInt(e.target.value)
+    params.map((a) => {
+      if (a.name === "eth") {
+        a.val = (depositEth);
+      }
+    })
+    handleSubmit(e)
+  }
+
+  const handleSubmitForTrade = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    tradeprice=parseInt(e.target.value)
+    params.map((a) => {
+      if (a.name === "tradeprice") {
+        a.val = (tradeprice);
+      }
+    })
+    handleSubmit(e)
   }
 
   useEffect(() => {
-
     console.log("inside home")
     fetch(uri).then(
       response => response.json()
@@ -132,7 +174,7 @@ const main = () => {
               placeholder="0.0"
               // value={1}
               pattern="^[0-9]*[.,]?[0-9]*$"
-              onChange={(e) => setdepositUsdc(e.target.value)}
+              onChange={(e) => handleSubmitForDepositUsdc(e)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -148,7 +190,7 @@ const main = () => {
               className={style.transferPropInput}
               placeholder="0.0"
               pattern="^[0-9]*[.,]?[0-9]*$"
-              onChange={(e) => setTradeprice(e.target.value)}
+              onChange={(e) => handleSubmitForTrade(e)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -163,7 +205,7 @@ const main = () => {
               className={style.transferPropInput}
               placeholder="0.0"
               pattern="^[0-9]*[.,]?[0-9]*$"
-              onChange={(e) => setDepositEth(e.target.value)}
+              onChange={(e) => handleSubmitForDepositEth(e)}
             />
             <div className={style.currencySelector}>
               <div className={style.currencySelectorContent}>
@@ -249,7 +291,7 @@ const main = () => {
                 }
               </h2>
             </div>
-            <div onClick={(e) => handleSubmit(e)} className={style.confirmButton}>
+            <div className={style.confirmButton}>
               Calculate
             </div>
 
@@ -270,8 +312,6 @@ const main = () => {
         {/* retrieved data will be shown here */}
       </div>
       <div className="border-spacing-10">
-
-
 
 
       </div>
